@@ -37,3 +37,25 @@ newTodo.save().then(
     console.log('unable to save Todo', e)
   }
 )
+
+var User = mongoose.model('User', {
+  email: {
+    type: String,
+    require: true,
+    minlength: 5,
+    trim: true
+  }
+})
+
+var newUser = new User({
+  email: 'Jane@gmail.com'
+})
+
+newUser.save().then(
+  doc => {
+    console.log(`saved User ${JSON.stringify(doc, undefined, 2)}`)
+  },
+  err => {
+    console.log('unable to save User', e)
+  }
+)
