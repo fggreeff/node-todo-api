@@ -19,12 +19,14 @@ var Todo = mongoose.model('Todo', {
 })
 
 var newTodo = new Todo({
-  text: 'Cook dinner'
+  text: 'Feed cat dinner',
+  completed: true,
+  completedAt: 123
 })
 
 newTodo.save().then(
   doc => {
-    console.log(`save Todo ${doc}`)
+    console.log(`save Todo ${JSON.stringify(doc, undefined, 2)}`)
   },
   e => {
     console.log('unable to save Todo', e)
