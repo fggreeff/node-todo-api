@@ -7,6 +7,12 @@ const { Todo } = require('./models/user')
 
 var app = express()
 
+app.use(bodyParser.json())
+
+app.post('/todos', (req, res) => {
+  console.log(req.body)
+})
+
 const port = 4000
 app.listen(port, () => {
   console.log(`started on port ${port}`)
