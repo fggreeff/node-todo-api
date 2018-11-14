@@ -27,3 +27,5 @@ const port = 4000
 app.listen(port, () => {
   console.log(`started on port ${port}`)
 })
+
+module.exports = { app }
