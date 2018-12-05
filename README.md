@@ -18,6 +18,12 @@ Start the application
 npm start
 ```
 
+Run the tests
+
+```sh
+npm run test-watch
+```
+
 ### Postman collection
 
 All endpoints are listed in the following collection:
