@@ -6,7 +6,12 @@ const { Todo } = require('../models/todo')
 
 const todos = [
   { _id: new ObjectID(), text: 'First test todo' },
-  { _id: new ObjectID(), text: 'Second test todo' }
+  {
+    _id: new ObjectID(),
+    text: 'Second test todo',
+    completed: true,
+    completedAt: 333
+  }
 ]
 
 beforeEach(done => {
@@ -26,7 +31,7 @@ describe('POST /todos', () => {
       .send({ text })
       .expect(200)
       .expect(res => {
-        expect(res.body.test).toBe(text)
+        expect(res.body.text).toBe(text)
       })
       .end((err, res) => {
         if (err) {
@@ -105,7 +110,7 @@ describe('GET /todos/:id', () => {
   })
 })
 
-describe('DELETE /todos/:id', function() {
+describe('DELETE /todos/:id', () => {
   it('should remove a todo', done => {
     var hexid = todos[1]._id.toHexString()
     request(app)
@@ -138,6 +143,46 @@ describe('DELETE /todos/:id', function() {
     request(app)
       .delete(`/todos/123ttt`)
       .expect(404)
+      .end(done)
+  })
+})
+
+describe('PATCH /todos/:id', () => {
+  it('should update the todo', done => {
+    var hexid = todos[0]._id.toHexString()
+
+    var todoUpdate = {
+      text: 'Eat banana pancakes',
+      completed: true
+    }
+    request(app)
+      .patch(`/todos/${hexid}`)
+      .send({ todoUpdate })
+      .expect(200)
+      .expect(res => {
+        expect(res.body.todo.text).toBe(todoUpdate.text)
+        expect(res.body.todo.completed).toBeA(todoUpdate.completed)
+        expect(res.body.todo.completedAt).toBe('number')
+      })
+      .end(done)
+  })
+
+  it('should clear completedAt when todo is not completed', done => {
+    var hexid = todos[1]._id.toHexString()
+
+    var todoUpdate = {
+      text: 'Make banana pancakes',
+      completed: false
+    }
+    request(app)
+      .patch(`/todos/${hexid}`)
+      .send({ todoUpdate })
+      .expect(200)
+      .expect(res => {
+        expect(res.body.todo.text).toBe(todoUpdate.text)
+        expect(res.body.todo.completed).toBeA(todoUpdate.completed)
+        expect(res.body.todo.completedAt).toNotExist()
+      })
       .end(done)
   })
 })
