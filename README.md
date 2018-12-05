@@ -18,15 +18,30 @@ Start the application
 npm start
 ```
 
+Run the tests
+
+```sh
+npm run test-watch
+```
+
 ### Postman collection
 
 All endpoints are listed in the following collection:
 
-[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/00e630887b3c03e000fb)
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/18a147c514a12186159c)
 
 # Deployment
 
-Heroku
+Access a deployed version
+[Heroku](https://shrouded-peak-66177.herokuapp.com/todos)
+
+Alternatively, deploy the application to your own Heroku account
+Deploy `git push heroku master`
+Create `heroku create`
+Add mongoDB addon `heroku addons:create mongolab:sandbox`
+View env vars `heroku config`
+Debug `heroku logs`
+Open URL `heroku open`
 
 ## Source
 
