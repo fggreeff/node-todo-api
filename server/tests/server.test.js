@@ -1,4 +1,5 @@
 const expect = require('expect')
+const request = require('supertest')
 const { ObjectID } = require('mongodb')
 
 const { app } = require('../server')
@@ -22,9 +23,15 @@ beforeEach(done => {
     .then(() => done())
 })
 
+/*beforeEach((done) => {
+  Todo.remove({}).then(() => {
+    return Todo.insertMany(todos);
+  }).then(() => done());
+});*/
+
 describe('POST /todos', () => {
-  skip.it('should create a new todo', done => {
-    var text = 'test todo text'
+  it('should create a new todo', done => {
+    var text = 'Test todo text'
 
     request(app)
       .post('/todos')
@@ -38,24 +45,22 @@ describe('POST /todos', () => {
           return done(err)
         }
 
-        Todo.find(text)
+        Todo.find({ text })
           .then(todos => {
             expect(todos.length).toBe(1)
             expect(todos[0].text).toBe(text)
             done()
           })
-          .catch(e => {
-            done(e) //note: using the statement syntax as apposed to the arrow func expression syntax
-          })
+          .catch(e => done(e))
       })
   })
 
-  skip.it('should not create todo with invalid body data', done => {
+  it('should not create todo with invalid body data', done => {
     request(app)
       .post('/todos')
       .send({})
       .expect(400)
-      .end(err => {
+      .end((err, res) => {
         if (err) {
           return done(err)
         }
@@ -64,9 +69,7 @@ describe('POST /todos', () => {
             expect(todos.length).toBe(2)
             done()
           })
-          .catch(e => {
-            done(e)
-          })
+          .catch(e => done(e))
       })
   })
 })
@@ -89,7 +92,7 @@ describe('GET /todos/:id', () => {
       .get(`/todos/${todos[0]._id.toHexString()}`)
       .expect(200)
       .expect(res => {
-        expect(res.body.todos.text).toBe(todos[0].text)
+        expect(res.body.todo.text).toBe(todos[0].text)
       })
       .end(done)
   })
@@ -125,7 +128,7 @@ describe('DELETE /todos/:id', () => {
         }
         Todo.findById(hexid)
           .then(todo => {
-            expect(todo).toNotExist()
+            expect(todo).not.toBeTruthy()
             done()
           })
           .catch(e => done(e))
@@ -155,14 +158,15 @@ describe('PATCH /todos/:id', () => {
       text: 'Eat banana pancakes',
       completed: true
     }
+
     request(app)
       .patch(`/todos/${hexid}`)
-      .send({ todoUpdate })
+      .send(todoUpdate)
       .expect(200)
       .expect(res => {
         expect(res.body.todo.text).toBe(todoUpdate.text)
-        expect(res.body.todo.completed).toBeA(todoUpdate.completed)
-        expect(res.body.todo.completedAt).toBe('number')
+        expect(res.body.todo.completed).toBe(todoUpdate.completed)
+        expect(typeof res.body.todo.completedAt).toBe('number')
       })
       .end(done)
   })
@@ -174,14 +178,15 @@ describe('PATCH /todos/:id', () => {
       text: 'Make banana pancakes',
       completed: false
     }
+
     request(app)
       .patch(`/todos/${hexid}`)
-      .send({ todoUpdate })
+      .send(todoUpdate)
       .expect(200)
       .expect(res => {
         expect(res.body.todo.text).toBe(todoUpdate.text)
-        expect(res.body.todo.completed).toBeA(todoUpdate.completed)
-        expect(res.body.todo.completedAt).toNotExist()
+        expect(res.body.todo.completed).toBe(todoUpdate.completed)
+        expect(res.body.todo.completedAt).not.toBeTruthy()
       })
       .end(done)
   })
