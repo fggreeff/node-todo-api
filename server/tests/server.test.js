@@ -124,7 +124,7 @@ describe('DELETE /todos/:id', () => {
         }
         Todo.findById(hexid)
           .then(todo => {
-            expect(todo).not.toBeTruthy()
+            expect(todo).toBeFalsy()
             done()
           })
           .catch(e => done(e))
@@ -221,7 +221,7 @@ describe('PATCH /todos/:id', () => {
       .expect(res => {
         expect(res.body.todo.text).toBe(todoUpdate.text)
         expect(res.body.todo.completed).toBe(todoUpdate.completed)
-        expect(res.body.todo.completedAt).not.toBeTruthy()
+        expect(res.body.todo.completedAt).toBeFalsy()
       })
       .end(done)
   })
@@ -287,7 +287,7 @@ describe('POST /users', () => {
       .send({ invalidEmail, password })
       .expect(400)
       .expect(res => {
-        expect(res.headers['x-auth']).not.toBeTruthy()
+        expect(res.headers['x-auth']).toBeFalsy()
         expect(res.body.name).toBe('ValidationError')
       })
       .end(done)
@@ -299,7 +299,7 @@ describe('POST /users', () => {
       .send({ email: users[0].email, password: 'Abc123!' })
       .expect(400)
       .expect(res => {
-        expect(res.headers['x-auth']).not.toBeTruthy()
+        expect(res.headers['x-auth']).toBeFalsy()
       })
       .end(done)
   })
@@ -320,7 +320,7 @@ describe('POST /users/login', () => {
         }
         User.findById(users[1]._id)
           .then(user => {
-            expect(user.tokens[1]).toMatchObject({
+            expect(user.toObject().tokens[1]).toMatchObject({
               access: 'auth',
               token: res.headers['x-auth']
             })
@@ -335,7 +335,7 @@ describe('POST /users/login', () => {
       .send({ email: users[1].email, password: users[1].password + '1' })
       .expect(400)
       .expect(res => {
-        expect(res.headers['x-auth']).not.toBeTruthy()
+        expect(res.headers['x-auth']).toBeFalsy()
       })
       .end((err, res) => {
         if (err) {
