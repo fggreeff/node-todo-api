@@ -28,7 +28,7 @@ npm run test-watch
 
 All endpoints are listed in the following collection:
 
-[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/18a147c514a12186159c)
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/688d5bd59bf64be4c5fb)
 
 # Deployment
 
